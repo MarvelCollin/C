@@ -100,7 +100,7 @@ int main() {
                 printf("\nViewing student data:\n");
                 struct Student student;
 				
-				// print data student                 
+		// read per line    
                 while (fscanf(file, "%[^-]-%d-%f\n", student.name, &student.age, &student.GPA) == 3) {
                     printStudent(&student);
                 }
