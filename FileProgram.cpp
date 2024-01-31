@@ -5,6 +5,7 @@
 
 //Buatlah file dengan nama student.txt didalam 1 folder yang sama.
 //copy text dibawah dan pastekan kedalam file txtnya
+//jangan lupa untuk uncomment dulu
 
 //John-22-3.90
 //Jane-23-3.85
