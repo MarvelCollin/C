@@ -1,49 +1,56 @@
-#include <windows.h>
 #include <stdio.h>
+#include <windows.h>
 
 int main() {
-    // Get the handle for mouse input
+    // Get a handle to the standard input, which is used for reading mouse input
     HANDLE inputMouse = GetStdHandle(STD_INPUT_HANDLE);
 
-    // Variables to store the number of events and an array to store input records (including mouse events)
+    // Variables to store the number of input records and an array to store input records
     DWORD num;
-    INPUT_RECORD buffer[128]; // Buffer to store input records, where each record can be a mouse event, keyboard event, etc.
+    INPUT_RECORD buffer[128];
 
-    // Variable to store the console mode before modification
+    // Variable to store the previous console mode
     DWORD previousConsoleMode;
 
-    // Get the current console mode
-    GetConsoleMode(inputMouse, &previousConsoleMode);
+    // Variable to check if the left mouse button is clicked
+    // you'll use this if faced with previous-menu (change menu)
+    int buttonClicked = 0;
 
-    // Enable extended flags and mouse input in the console mode
-    // ENABLE_EXTENDED_FLAGS: Enables extended flags for input, allowing additional input modes
-    // ENABLE_MOUSE_INPUT: Enables mouse input in the console
-    SetConsoleMode(inputMouse, ENABLE_EXTENDED_FLAGS | ENABLE_MOUSE_INPUT);
+    // Loop until the left mouse button is clicked
+    while (!buttonClicked) {
+        // Get the current console mode and store it in previousConsoleMode
+        GetConsoleMode(inputMouse, &previousConsoleMode);
 
-    while (1) {
-        // Read input from the mouse into the buffer
+        // Set the console mode to enable extended flags and mouse input
+        SetConsoleMode(inputMouse, ENABLE_EXTENDED_FLAGS | ENABLE_MOUSE_INPUT);
+
+        // Reset the buttonClicked flag to 0
+        buttonClicked = 0;
+
+        // Read console input into the buffer, specifying a maximum of 128 records
         ReadConsoleInput(inputMouse, buffer, 128, &num);
 
-        // Iterate through each event in the b-uffer
+        // Iterate through the input records
         for (DWORD i = 0; i < num; i++) {
-            // Check if the event is a mouse event
-            if (buffer[i].EventType == MOUSE_EVENT) {
-                // Check if the left button is pressed
-                if (buffer[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
-                    // Get the coordinates of the mouse position
-                    COORD mousePos = buffer[i].Event.MouseEvent.dwMousePosition;
+            // Check if the input record is a mouse event with the left button pressed
+            if (buffer[i].EventType == MOUSE_EVENT && buffer[i].Event.MouseEvent.dwEventFlags == 0 &&
+                buffer[i].Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED) {
+                
+                // Get the mouse position from the event
+                COORD mousePos = buffer[i].Event.MouseEvent.dwMousePosition;
 
-                    // Print a message that the mouse left button is clicked along with its coordinates
-                    printf("Mouse left button clicked at X: %d, Y: %d\n", mousePos.X, mousePos.Y);
+                // Restore the previous console mode
+                SetConsoleMode(inputMouse, previousConsoleMode);
 
-                    // Add your additional code here based on the left mouse button click event
-                }
+                // Print the message indicating that the left mouse button is clicked
+                printf("Mouse left button clicked at X: %d, Y: %d\n", mousePos.X, mousePos.Y);
+
+                // Set the buttonClicked flag to 1 to exit the loop
+                buttonClicked = 1;
             }
         }
     }
 
-    // Restore the console mode to the previous state
+    // Restore the previous console mode before exiting the program
     SetConsoleMode(inputMouse, previousConsoleMode);
-
-    return 0;
 }
