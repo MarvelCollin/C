@@ -1,0 +1,54 @@
+#include <stdio.h>
+
+void merge(int arr[], int start, int mid, int end){
+    int len = end - start + 1; 
+
+    int temp[len];	
+
+    int i = start, j = mid + 1, k = 0; 
+
+    while(i <= mid && j <= end){
+        if(arr[i] > arr[j]){
+            temp[k++] = arr[j++];
+        } else {
+            temp[k++] = arr[i++];
+        }
+    }
+
+    while(i <= mid){
+        temp[k++] = arr[i++];
+    }
+    while(j <= end){
+        temp[k++] = arr[j++];
+    }
+    
+    for(int x = 0; x < len; x++){ 
+        arr[start + x] = temp[x];
+    }
+}
+
+void mergesort(int arr[], int start, int end){
+    if(start < end){
+        int mid = (start + end) / 2;
+        
+        mergesort(arr, start, mid);
+        
+		mergesort(arr, mid + 1, end);
+        
+        merge(arr, start, mid, end);
+    }
+}
+
+int main(){
+    int array[] = {2, 5, 8, 9, 10, 14, 16, 1, 5};
+    
+    int len = sizeof(array) / sizeof(array[0]);
+    mergesort(array, 0, len - 1);
+    
+    for(int x = 0; x < len; x++){
+        printf("%d ", array[x]);
+    }
+
+    return 0;
+}
+	
