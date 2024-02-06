@@ -11,9 +11,8 @@ void merge(int arr[], int start, int mid, int end){
 	// assign value temporary untuk temporary array kita
     int i = start, j = mid + 1, k = 0; 
 
-	// 		kiri        kanan
+	// kiri        kanan
     while(i <= mid && j <= end){
-    	//  
         if(arr[i] > arr[j]){
             temp[k++] = arr[j++];
         } else {
@@ -59,8 +58,8 @@ int main(){
     
     int len = sizeof(array) / sizeof(array[0]);
 	
-	// -1 supaya kena last index karena len nya merupakan size
-	// total size = 9 , tapi last index 8 makanya harus -1 
+// -1 supaya kena last index karena len nya merupakan size
+// total size = 9 , tapi last index 8 makanya harus -1 
     mergesort(array, 0, len - 1);
     
     for(int x = 0; x < len; x++){
