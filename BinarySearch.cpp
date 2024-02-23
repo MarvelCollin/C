@@ -3,7 +3,6 @@
 // konsep : sama seperti mencari halaman pada sebuah buku tapi selalu dibagi 2
 // binary search hanya boleh digunakan ketika arraynya sudah di sort
 
-//               array      kiri       kanan      target
 int binarySearch(int arr[], int kiri, int kanan, int x) {
     // selama value kiri tidak melebih atau sama dengan kanan, 
 	// maka masih bisa melanjutkan
