@@ -8,7 +8,7 @@ int binarySearch(int arr[], int kiri, int kanan, int x) {
 	// maka masih bisa melanjutkan
 	while (kiri <= kanan) {
 		// cari nilai tengahnya
-        int tengah = kiri + (kanan - kiri) / 2;
+        int tengah = (kanan + kiri) / 2;
 
 		// nah jadi cara kerja si binary search selalu belah tengah
 		// sampai menemukan si targetnya
