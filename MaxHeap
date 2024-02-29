@@ -13,6 +13,14 @@ int parent(int currentIndex){
 	return currentIndex / 2;
 }
 
+int getLeftChild(int pos){
+	return pos * 2;
+}
+
+int getRightChild(int pos){
+	return pos * 2 + 1;
+}
+
 void insert(int value){
 	size++;
 	
@@ -27,18 +35,53 @@ void insert(int value){
 	}
 }
 
+void heapify(int pos){
+	int largest = pos;
+	int leftChild = getLeftChild(pos);
+	int rightChild = getRightChild(pos);
+	
+	if(leftChild <= size && arr[leftChild] > arr[largest]){
+		largest = leftChild;
+	}
+	
+	if(rightChild <= size && arr[rightChild] > arr[largest]){
+		largest = rightChild;
+	}
+	
+	if(largest != pos){
+		swap(&arr[largest], &arr[pos]);
+		
+		heapify(largest);
+	}
+}
+
+void extract(){
+	int max = arr[1];
+	arr[1] = arr[size];
+	
+	size--;
+	
+	heapify(1);
+	
+}
+
 void print(){
 	for(int i = 1; i <= size; i++){
 		printf("%d ", arr[i]);
 	}
+	
+	printf("\n");
 }
 
 int main(){
-	
 	insert(100);
 	insert(30);
 	insert(50);
 	insert(120);
+	
+	print();
+	
+	extract();
 	
 	print();
 	
