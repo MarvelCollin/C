@@ -1,0 +1,46 @@
+#include<stdio.h>
+
+int arr[100];
+int size = 0;
+
+void swap(int *a, int *b){
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+int parent(int currentIndex){
+	return currentIndex / 2;
+}
+
+void insert(int value){
+	size++;
+	
+	arr[size] = value; 
+	
+	int currentIndex = size;
+	
+	while(arr[currentIndex] > arr[parent(currentIndex)] && currentIndex > 1){
+		swap(&arr[currentIndex] , &arr[parent(currentIndex)]);
+		
+		currentIndex = parent(currentIndex);
+	}
+}
+
+void print(){
+	for(int i = 1; i <= size; i++){
+		printf("%d ", arr[i]);
+	}
+}
+
+int main(){
+	
+	insert(100);
+	insert(30);
+	insert(50);
+	insert(120);
+	
+	print();
+	
+	return 0;
+}
