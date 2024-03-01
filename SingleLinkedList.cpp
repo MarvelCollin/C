@@ -60,7 +60,35 @@ void pushMid(int umur){
 		mahasiswaBaru->next = mahasiswaSekarang->next;
 		mahasiswaSekarang->next = mahasiswaBaru;
 	}
-	
+}
+
+void popHead(){
+	if(head == NULL){
+		printf("tidak ada mahasiswa\n");
+		return;
+	} else {
+		struct Mahasiswa *temp = head;
+		
+		head = head->next;
+		free(temp);
+	}
+}
+
+void popTail(){
+	if(head == NULL){
+		printf("tidak ada mahasiswa\n");
+		return;
+	} else {
+		struct Mahasiswa *currMahasiswa = head;
+		
+		while(currMahasiswa != NULL && currMahasiswa->next != tail){
+			currMahasiswa = currMahasiswa->next;
+		}
+		
+		tail = currMahasiswa;
+		free(currMahasiswa->next);
+		tail->next = NULL;
+	}
 }
 
 void printAll(){
@@ -91,6 +119,12 @@ int main(){
 	pushMid(7);
 	pushMid(2);
 	printAll();
+	
+	popTail();
+	printAll();
+	
+	
+	
 	
 	
 	return 0;
