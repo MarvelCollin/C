@@ -5,93 +5,88 @@
 
 #define ALPHABET_SIZE 26
 
-typedef struct TrieNode {
+struct TrieNode {
     struct TrieNode* children[ALPHABET_SIZE];
-    char desc[1000];
     bool isEndOfWord;
-} TrieNode;
+};
 
-TrieNode* root = NULL;
-
-TrieNode* createNode(char desc[]) {
-    TrieNode* node = (TrieNode*) malloc(sizeof(TrieNode));
-        node->isEndOfWord = false;
-//        for (int i = 0; i < ALPHABET_SIZE; i++) {
-//            node->children[i] = NULL;
-//        }
-        memset(node->children, 0, sizeof(node->children));
-        strcpy(node->desc, desc);
-    return node;
+struct TrieNode* createNode() {
+    struct TrieNode* newNode = (struct TrieNode*)malloc(sizeof(struct TrieNode));
+    if (newNode) {
+        newNode->isEndOfWord = false;
+        for (int i = 0; i < ALPHABET_SIZE; i++) {
+            newNode->children[i] = NULL;
+        }
+    }
+    return newNode;
 }
 
-void insert(char word[], char desc[]) {
-    if (!root) {
-        root = createNode(desc);
-    }
-    TrieNode* current = root;
-    
-    int i = 0;
-    while (word[i] != '\0') {
-        int index = word[i] - 'a';
+void insert(struct TrieNode* root, const char* key) {
+    struct TrieNode* current = root;
+    for (int i = 0; key[i] != '\0'; i++) {
+        int index = key[i] - 'a';
         if (!current->children[index]) {
-            current->children[index] = createNode(desc);
+            current->children[index] = createNode();
         }
         current = current->children[index];
-        i++;
     }
     current->isEndOfWord = true;
 }
 
-void printWords(TrieNode* node, char prefix[], int depth) {
-    if (node->isEndOfWord) {
-        prefix[depth] = '\0';
-        printf("End : %s\n", prefix);
+bool search(struct TrieNode* root, const char* key) {
+    struct TrieNode* current = root;
+    for (int i = 0; key[i] != '\0'; i++) {
+        int index = key[i] - 'a';
+        if (!current->children[index]) {
+            return false;
+        }
+        current = current->children[index];
     }
-    
+    return current && current->isEndOfWord;
+}
+
+void suggestionsUtil(struct TrieNode* root, char prefix[], int idx) {
+    if (root->isEndOfWord) {
+        prefix[idx] = '\0';
+        printf("%s\n", prefix);
+    }
     for (int i = 0; i < ALPHABET_SIZE; i++) {
-        if (node->children[i]) {
-            prefix[depth] = 'a' + i;
-            printWords(node->children[i], prefix, depth + 1);
+        if (root->children[i]) {
+            prefix[idx] = i + 'a';
+            suggestionsUtil(root->children[i], prefix, idx + 1);
         }
     }
 }
 
-void search(const char word[]) {
-    if (!root) {
-        printf("Nah\n");
-        return;
-    }
-    
-    TrieNode* current = root;
-    int i = 0;
-    char prefix[1000];  
-    
-    while (word[i] != '\0') {
-        int index = word[i] - 'a';
+void findSuggestions(struct TrieNode* root, const char* prefix) {
+    struct TrieNode* current = root;
+    int n = strlen(prefix);
+    char word[n + 1];
+    for (int i = 0; i < n; i++) {
+        int index = prefix[i] - 'a';
         if (!current->children[index]) {
-            printf("Nah\n");
+            printf("No words found with prefix '%s'\n", prefix);
             return;
         }
-        prefix[i] = word[i];
+        word[i] = prefix[i];
         current = current->children[index];
-        i++;
     }
-    
-    prefix[i] = '\0';
-    printf("Words matching prefix '%s':\n", prefix);
-    
-    printWords(current, prefix, i);
+    word[n] = '\0';
+    suggestionsUtil(current, word, n);
 }
 
-
-
-
 int main() {
-    insert("appPle", "asd");
-    insert("banana", "asdaasdags");
-    insert("app", "asdagsdgayshda");
-    insert("bat", "ashhaushaushd");
-    search("ap");
+    struct TrieNode* root = createNode();
+    insert(root, "hello");
+    insert(root, "hellob");
+    insert(root, "world");
+
+    printf("Searching for 'hello': %s\n", search(root, "hello") ? "Found" : "Not Found");
+    printf("Searching for 'world': %s\n", search(root, "world") ? "Found" : "Not Found");
+    printf("Searching for 'apple': %s\n", search(root, "apple") ? "Found" : "Not Found");
+    
+    printf("Suggestions for prefix 'hell':\n");
+    findSuggestions(root, "hell");
 
     return 0;
 }
