@@ -72,40 +72,27 @@ int moveY[4] = {-1,0,1,0};
 int moveX[4] = {0,1,0,-1};
 
 void solve(){
-	// simpan map bagian mana yang mau dicek
 	vector<Map*> listMap;
-	// push_back itu seperti push tail, ini lagi push startPos
+	// masukin start pos ke dalam list 
 	listMap.push_back(&sMap[startPos.y][startPos.x]);
 	Map *currMap;
 	
 	while(!listMap.empty()){
-		// A* disini
 		int index = 0;
-		
-		// rumus phytagoras (pake euclidian)
+		// rumus phytagoras
 		int heu = sqrt(pow(listMap[0]->currPos.x, 2) + pow(listMap[0]->currPos.y, 2));
 		
 		for(int i = 1; i < listMap.size(); i++){
-			int tempHeu = sqrt(pow(listMap[0]->currPos.x, 2) + pow(listMap[0]->currPos.y, 2));
-			
-			// bandingin heuristic mana yang paling kecil
+			// kasi temp heu supaya bisa bandingin
+			int tempHeu = sqrt(pow(listMap[i]->currPos.x, 2) + pow(listMap[i]->currPos.y, 2));
 			if(tempHeu < heu){
 				heu = tempHeu;
-				// sekalian ganti indexnya
 				index = i;
 			}
 		}
 		
-		// ganti jadi index untuk A*
 		currMap = listMap[index];
-		// ambil listMap yang pertama
-		
-		// lalu hapus
-		// erase -> hapus, begin yang pertama (index 0)
-		// untuk A* di + index
 		listMap.erase(listMap.begin() + index);
-		
-		// lalu set visited ke true
 		currMap->isVisited = true;
 		
 		// check apakah sudah smpe target
