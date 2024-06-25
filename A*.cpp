@@ -82,7 +82,7 @@ void solve(){
 		// A* disini
 		int index = 0;
 		
-		// rumus euclidian
+		// rumus phytagoras (pake euclidian)
 		int heu = sqrt(pow(listMap[0]->currPos.x, 2) + pow(listMap[0]->currPos.y, 2));
 		
 		for(int i = 1; i < listMap.size(); i++){
