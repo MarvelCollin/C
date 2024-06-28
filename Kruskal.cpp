@@ -83,7 +83,6 @@ int main(){
     edge[3] = (Edge){1,3,15};
     edge[4] = (Edge){2,3,4};
     
-    // Memanggil fungsi utama untuk menyelesaikan masalah
     solve(edge, v, e);
     
     return 0;
