@@ -1,120 +1,105 @@
-#include<stdio.h>
+#include <stdio.h>
 
 int arr[100];
 int size = 0;
 
-// function utk swap
+
+// dapatin parentnya
+int getParent(int pos){
+	return pos / 2;
+}
+
+// dapatin anakan kiri 
+int getLeftChild(int pos){
+	return pos * 2;
+}
+
+// dapatin anakan kanan
+int getRightChild(int pos){
+	return pos * 2 + 1;
+}
+
+// function utk tuker value
 void swap(int *a, int *b){
 	int temp = *a;
 	*a = *b;
 	*b = temp;
 }
-// get parent
-int parent(int currentIndex){
-	//       1
-	//     2  3
-	
-	// parent dari idx 2 adalah 1
-	// idx / 2 
-	// 2 / 2 = 1
-	return currentIndex / 2;
-}
-
-int getLeftChild(int pos){
-	//       1
-	//     2  3
-	
-	// left child dari idx 1 adalah 2
-	// 1 * 2 -> 2
-	return pos * 2;
-}
-
-int getRightChild(int pos){
-	//       1
-	//     2  3
-	
-	// right child dari idx 1 adalah 3
-	// 1 * 2 + 1 -> 3
-	return pos * 2 + 1;
-}
 
 void insert(int value){
-	// tambahkan tempat kosong
-	size++;
+	size++; //buat buletannya (node) / siapin size
 	
-	arr[size] = value; // masukin tmpt kosong tadi dgn value
+	arr[size] = value; // assign value
 	
-	int currentIndex = size; // dapatkan curr idx (supaya bisa diganti ganti)
+	int currIdx = size; // ganti penamaan
+	int parent = getParent(currIdx); // assign parent
 	
-	// ngecek selama curridx > parentnya serta curridx > 1 karna menghindari
-	// insert yang pertama kali
-	while(arr[currentIndex] > arr[parent(currentIndex)] && currentIndex > 1){
-		// tuker si valuenya
-		swap(&arr[currentIndex] , &arr[parent(currentIndex)]);
+	while(arr[currIdx] > arr[parent] && size > 1){ // apakah value current index > daripada parent
+		// untuk size > 1 digunakan utk kasus pertama kali insert
 		
-		// naikin di curridx menjadi parent
-		currentIndex = parent(currentIndex);
+		// swap
+		swap(&arr[currIdx], &arr[parent]);
+		
+		// ganti current index untuk lanjut ngecheck
+		currIdx = parent;
 	}
 }
 
 void heapify(int pos){
-	// initialize dulu
-	int largest = pos;
+	// kasih penamaan
+	int max = pos;
 	int leftChild = getLeftChild(pos);
 	int rightChild = getRightChild(pos);
 	
-	// compare left child sama si index largest
-	if(leftChild <= size && arr[leftChild] > arr[largest]){
-		// ganti indexnya
-		largest = leftChild;
+	//apabila leftchild lebih besar daripada top
+	if(arr[leftChild] > arr[max] && leftChild <= size){
+		max = leftChild;
 	}
 	
-	// compare right child sama si index largest
-	if(rightChild <= size && arr[rightChild] > arr[largest]){
-		// ganti indexnya
-		largest = rightChild;
+	if(arr[rightChild] > arr[max] && rightChild <= size){
+		max = rightChild;
 	}
 	
-	// cek apakah kondisi tadi ada yang keganti ?
-	if(largest != pos){
-		// tuker valuenya
-		swap(&arr[largest], &arr[pos]);
+	//check apakah maxnya ada keganti
+	if(pos != max){
+		//tuker
+		swap(&arr[pos], &arr[max]);
 		
-		// recursive
-		heapify(largest);
+		
+		//lanjut check ke atas / recursive
+		heapify(max);
 	}
 }
 
 void extract(){
-	int max = arr[1];
+	// assign array atas ke array paling terakhir
 	arr[1] = arr[size];
 	
-	// buang value yang terakhir
+	// hilangin sizenya
 	size--;
 	
-	heapify(1);
 	
+	// heapify
+	heapify(1);
 }
 
 void print(){
 	for(int i = 1; i <= size; i++){
 		printf("%d ", arr[i]);
 	}
-	
-	printf("\n");
+	printf("\nmax value : %d\n", arr[1]);
 }
 
 int main(){
 	insert(100);
-	insert(30);
-	insert(50);
-	insert(120);
+	insert(105);
+	insert(110);
 	
 	print();
-	
 	extract();
-	
 	print();
 	
+	insert(110);
+	print();
 	return 0;
 }
